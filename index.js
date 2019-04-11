@@ -1,7 +1,7 @@
 let crypto = require("crypto")
 let http = require('http')
 
-let { AccessKeyId, AccessKeySecret, RecordId } = require('./config')
+let { AccessKeyId, AccessKeySecret, RecordId } = require('./config/user')
 
 let HmacSHA1 = function (str, key) {
     return crypto.createHmac('sha1', key).update(str).digest('base64')
