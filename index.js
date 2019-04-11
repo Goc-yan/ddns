@@ -1,6 +1,8 @@
 let crypto = require("crypto")
 let http = require('http')
 
+let { AccessKeyId, AccessKeySecret, RecordId } = require('./config')
+
 let HmacSHA1 = function (str, key) {
     return crypto.createHmac('sha1', key).update(str).digest('base64')
 }
@@ -98,13 +100,13 @@ class AliCloudClient {
 }
 
 let aliCloudClient = new AliCloudClient({
-    AccessKeyId: 'LTAIHExHtCOnIlMW',
-    AccessKeySecret: 'eooozhRB7EOU0GECxcQ1c7PHCNUoeH',
+    AccessKeyId: AccessKeyId,
+    AccessKeySecret: AccessKeySecret,
 })
 
 var options = {
     Action: 'UpdateDomainRecord',
-    RecordId: '16995417818096640',
+    RecordId: RecordId,
     RR: '@',
     Type: 'A',
     Value: '59.61.100.172',
