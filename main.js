@@ -4,8 +4,6 @@ const { AccessKeyId, AccessKeySecret } = require('./config/user')
 const AliCloudClient = require('./aliCloudClient')
 const { getIP } = require('./utils')
 
-let timer = 0
-
 let main = async function () {
 
     // 更新 DomainRecord
@@ -19,7 +17,7 @@ let main = async function () {
             RecordId,
         }
         return aliCloudClient.get(options).then(res => {
-            console.log('success')
+            console.log('update success')
         })
     }
 
@@ -38,8 +36,6 @@ let main = async function () {
 
         if (localIP !== IP) {
             console.log('本地 IP 改变, 更新域名记录值')
-            localIP = '59.61.100.' + (172 + ++timer)
-            console.log(localIP)
             await UpdateDomainRecord(RecordId, localIP)
             console.log('域名记录值更新成功')
         }
