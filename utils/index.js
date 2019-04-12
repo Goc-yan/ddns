@@ -5,7 +5,9 @@ const httpGet = function (url, options = {}, encode = false) {
 
     let urlParams = obj2URL(options, encode)
 
-    url = `http://${url}?${urlParams}`
+    urlParams = urlParams ? `?${urlParams}` : ''
+
+    url = `http://${url}${urlParams}`
 
     return new Promise((resolve, reject) => {
 
@@ -29,7 +31,7 @@ const httpGet = function (url, options = {}, encode = false) {
                 try {
                     resolve(JSON.parse(rawData))
                 } catch (e) {
-                    console.error(e.message)
+                    resolve(rawData)
                 }
             })
         }).on('error', (e) => {
@@ -55,8 +57,13 @@ const obj2URL = function (obj, encode) {
     return strAry.join('&')
 }
 
+const getIP = function () {
+    return httpGet('ident.me')
+}
+
 module.exports = {
     httpGet,
     HmacSHA1,
-    obj2URL
+    obj2URL,
+    getIP
 }

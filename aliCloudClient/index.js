@@ -35,4 +35,11 @@ module.exports = class AliCloudClient {
         options = this.setParams('GET', options)
         return httpGet(this.domain, options, true)
     }
+
+    getRecord() {
+        return this.get({
+            Action: 'DescribeDomainRecords',
+            DomainName: 'gocyan.cn'
+        })
+    }
 }
