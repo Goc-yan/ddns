@@ -89,22 +89,9 @@ const dateFormat = function (date = new Date(), format) {
     return str
 }
 
-const log = function (iMsg) {
-
-    let date = dateFormat(new Date(), 'YYYY-MM-DD hh:mm:ss')
-
-    let file_path = path.resolve(__dirname, '..', 'ip_log.txt')
-    console.log(file_path)
-    fs.open(file_path, 'a', function (err, fd) {
-
-        let msg = date + ' => ' + iMsg + '\n'
-
-        //同步写入
-        fs.writeSync(fd, msg);
-    });
-}
-
 const getLastLog = function () {
+
+    var pattern = /(2(5[0-5]{1}|[0-4]\d{1})|[0-1]?\d{1,2})(\.(2(5[0-5]{1}|[0-4]\d{1})|[0-1]?\d{1,2})){3}/
 
     let data = '', lineNum = 0
     let file_path = path.resolve(__dirname, '..', 'ip_log.txt')
@@ -114,8 +101,15 @@ const getLastLog = function () {
     if (!isExists) return null
 
     data = fs.readFileSync(file_path, 'utf-8').split('\n')
-    lineNum = data.length
-    return data[lineNum - 2]
+    let index = data.length - 1
+
+    
+    for (let i = index; i > 0; i--) {
+        let currentLine = data[i]
+        if (pattern.test(currentLine)) return currentLine
+    }
+
+    return null
 }
 
 module.exports = {
@@ -123,6 +117,6 @@ module.exports = {
     HmacSHA1,
     obj2URL,
     getCurrentIP,
-    log,
+    dateFormat,
     getLastLog
 }
