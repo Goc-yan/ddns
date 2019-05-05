@@ -13,7 +13,7 @@ let main = async function () {
         let currentIP = await getCurrentIP()
         
         if (preIP === currentIP) return
-  
+        
         let currentTime = dateFormat(new Date(), 'YYYY-MM-DD hh:mm:ss')
         console.log(currentTime, '=>', currentIP)
 

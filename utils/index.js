@@ -94,7 +94,7 @@ const getLastLog = function () {
     // var ipPattern = /(2(5[0-5]{1}|[0-4]\d{1})|[0-1]?\d{1,2})(\.(2(5[0-5]{1}|[0-4]\d{1})|[0-1]?\d{1,2})){3}/
     var pattern = / =\> (2(5[0-5]{1}|[0-4]\d{1})|[0-1]?\d{1,2})(\.(2(5[0-5]{1}|[0-4]\d{1})|[0-1]?\d{1,2})){3}/
 
-    let data = ''
+    let data = '', lineNum = 0
     let file_path = path.resolve(__dirname, '..', 'ip_log.txt')
     let isExists = fs.existsSync(file_path)
 
@@ -104,6 +104,7 @@ const getLastLog = function () {
     data = fs.readFileSync(file_path, 'utf-8').split('\n')
     let index = data.length - 1
 
+    
     for (let i = index; i > 0; i--) {
         let currentLine = data[i]
         if (pattern.test(currentLine)) return currentLine
