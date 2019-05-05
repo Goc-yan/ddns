@@ -1,45 +1,47 @@
 const { AccessKeyId, AccessKeySecret, RecordId } = require('./config/user')
 
 const AliCloudClient = require('./aliCloudClient')
-const { getCurrentIP, log, getLastLog } = require('./utils')
+const { getCurrentIP, dateFormat, getLastLog } = require('./utils')
 
 let main = async function () {
 
-    let perIPRecord = await getLastLog()
-    let perIP = perIPRecord ? perIPRecord.split(' => ')[1] : ''
-    let currentIP = await getCurrentIP()
-    
-    log(currentIP)
+    try {
+        // 历史IP
+        let preIPRecord = await getLastLog()
+        let preIP = preIPRecord ? preIPRecord.split(' => ')[1] : ''
+        // 当前IP
+        let currentIP = await getCurrentIP()
+        
+        if (preIP === currentIP) return
+  
+        let currentTime = dateFormat(new Date(), 'YYYY-MM-DD hh:mm:ss')
+        console.log(currentTime, '=>', currentIP)
 
+        // 更新 DomainRecord
+        let UpdateDomainRecord = function (RecordId, IP) {
 
-    return 
-    // 若IP相同
-    if(perIP === currentIP) return 
-    
-
-    // 更新 DomainRecord
-    let UpdateDomainRecord = function (RecordId, IP) {
-
-        var options = {
-            Action: 'UpdateDomainRecord',
-            RR: '@',
-            Type: 'A',
-            Value: IP,
-            RecordId,
+            var options = {
+                Action: 'UpdateDomainRecord',
+                RR: '@',
+                Type: 'A',
+                Value: IP,
+                RecordId,
+            }
+            return aliCloudClient.get(options).then(res => {
+                console.log(currentIP, '=> update success')
+            })
         }
-        return aliCloudClient.get(options).then(res => {
-            log(currentIP + ' => update success')
+
+        let aliCloudClient = new AliCloudClient({
+            AccessKeyId,
+            AccessKeySecret,
         })
+
+        // 更新域映射IP
+        UpdateDomainRecord(RecordId, currentIP)
+    } catch (e) {
+        console.error(e)
     }
-
-    let aliCloudClient = new AliCloudClient({
-        AccessKeyId,
-        AccessKeySecret,
-    })
-
-    // 更新域映射IP
-    UpdateDomainRecord(RecordId, currentIP)
-
 }
 
 main()
